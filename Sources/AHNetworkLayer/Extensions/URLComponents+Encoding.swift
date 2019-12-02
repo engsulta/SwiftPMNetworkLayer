@@ -1,6 +1,6 @@
 //
 //  URLComponents+Encoding.swift
-//  VFGFoundation
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/15/19.
 //  Copyright © 2019 Vodafone. All rights reserved.

@@ -1,6 +1,6 @@
 //
-//  VFGNetworkClientDefaultExtensions.swift
-//  VFGFoundation
+//  AHNetworkClientDefaultExtensions.swift
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/17/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
@@ -13,16 +13,16 @@ public typealias ResponseCompletionHandler = (ResponseArg) -> Void
  this extension give a default implementation for execute network
  call it accept type VFRequestType else you can build your own implementation with different request type
  */
-extension VFGNetworkClient {
-    open func execute<T: Codable>(request: VFGRequestProtocol,
+extension AHNetworkClient {
+    open func execute<T: Codable>(request: AHRequestProtocol,
                                   model: T.Type,
-                                  progressClosure: VFGNetworkProgressClosure? = nil,
-                                  completion: @escaping VFGNetworkCompletion) {
+                                  progressClosure: AHNetworkProgressClosure? = nil,
+                                  completion: @escaping AHNetworkCompletion) {
         // the response handler that will be executed once network response recieved
         let responseCompletionHandler: (Data?,URLResponse?, Error?) -> Void = { [weak self] (data, res, error) in
             guard let self = self else {
                 DispatchQueue.main.async {
-                    completion(nil, VFGNetworkError.network)
+                    completion(nil, AHNetworkError.network)
                 }
                 return
             }
@@ -39,7 +39,7 @@ extension VFGNetworkClient {
             } else {
                 let fullRequestHeaders = buildHeaders(request: request, completion: completion)
                 let urlRequest = try buildRequest(from: request, with: fullRequestHeaders, to: URL(string: baseUrl))
-                VFGNetworkLogger.log(request: urlRequest)
+                AHNetworkLogger.log(request: urlRequest)
                 currentTask = session.dataTask(with: urlRequest, completionHandler: responseCompletionHandler)
             }
 
@@ -50,10 +50,10 @@ extension VFGNetworkClient {
             }
         } catch {
             DispatchQueue.main.async {
-                completion(nil, VFGNetworkError.unknown)}
+                completion(nil, AHNetworkError.unknown)}
         }
     }
-    open func cancel(request: VFGRequestProtocol, completion: @escaping () -> Void) {
+    open func cancel(request: AHRequestProtocol, completion: @escaping () -> Void) {
         let cancelledTaskIndex = runningTasks.firstIndex { $0.request?.hash == request.hash}
 
         guard let taskIndex = cancelledTaskIndex else { return }
@@ -66,15 +66,15 @@ extension VFGNetworkClient {
     }
 }
 /// upload default implementation
-extension VFGNetworkClient {
-    open func upload<T: Codable, U: Encodable>(request: VFGRequestProtocol,
+extension AHNetworkClient {
+    open func upload<T: Codable, U: Encodable>(request: AHRequestProtocol,
                                                responseModel: T.Type,
                                                uploadModel: U,
-                                               completion: @escaping VFGNetworkCompletion) {
+                                               completion: @escaping AHNetworkCompletion) {
         let fullRequestHeaders = buildHeaders(request: request, completion: completion)
         do {
             let urlRequest = try buildRequest(from: request, with: fullRequestHeaders, to: URL(string: baseUrl))
-            VFGNetworkLogger.log(request: urlRequest)
+            AHNetworkLogger.log(request: urlRequest)
             let uploadModeldata = try JSONEncoder().encode(uploadModel)
             let currentTask = session.uploadTask(with: urlRequest,
                                                  from: uploadModeldata) { [weak self] (data, response, error) in
@@ -89,15 +89,15 @@ extension VFGNetworkClient {
             currentTask.resume()
         } catch {
             DispatchQueue.main.async {
-                completion(nil, VFGNetworkError.unknown)}
+                completion(nil, AHNetworkError.unknown)}
         }
     }
 }
 /// download file simple implementation
-extension VFGNetworkClient {
+extension AHNetworkClient {
     public func download(url: String,
-                         progressClosure: VFGNetworkProgressClosure? = nil,
-                         completion: @escaping VFGNetworkDownloadClosure) {
+                         progressClosure: AHNetworkProgressClosure? = nil,
+                         completion: @escaping AHNetworkDownloadClosure) {
         let currentTask: URLSessionDownloadTaskProtocol
         let baseURL = URL(string: url)
 
@@ -113,26 +113,26 @@ extension VFGNetworkClient {
     }
 }
 // this extension for mapping the response
-extension VFGNetworkClient {
+extension AHNetworkClient {
     open func decodeJsonData<T: Codable>(_ responseData: Data,
                                          _ model: T.Type,
-                                         _ completion: @escaping VFGNetworkCompletion) {
+                                         _ completion: @escaping AHNetworkCompletion) {
         do {
             let jsonData = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers)
-            VFGNetworkLogger.log(jsonResponse: jsonData)
+            AHNetworkLogger.log(jsonResponse: jsonData)
             let apiResponse = try JSONDecoder().decode(model, from: responseData)
             DispatchQueue.main.async {
                 completion(apiResponse, nil)
-                VFGNetworkLogger.log(jsonResponse: apiResponse)
+                AHNetworkLogger.log(jsonResponse: apiResponse)
             }
         } catch {
             DispatchQueue.main.async {
-                completion(nil, VFGNetworkResponse.unableToDecode)}
+                completion(nil, AHNetworkResponse.unableToDecode)}
         }
     }
     open func mapResponse<T: Codable>(responseArg: ResponseArg,
                                       model: T.Type,
-                                      completion: @escaping VFGNetworkCompletion) {
+                                      completion: @escaping AHNetworkCompletion) {
         guard responseArg.error == nil else {
              DispatchQueue.main.async {
                 completion(nil, responseArg.error)
@@ -145,7 +145,7 @@ extension VFGNetworkClient {
                  decodeJsonData(responseData, model, completion)
             } else {
              DispatchQueue.main.async {
-                completion(nil, VFGNetworkError.empty)
+                completion(nil, AHNetworkError.empty)
                 }
             }
             return
@@ -155,10 +155,10 @@ extension VFGNetworkClient {
         case .success:
             guard let responseData = responseArg.data else {
                 DispatchQueue.main.async {
-                    completion(nil, VFGNetworkResponse.noData)}
+                    completion(nil, AHNetworkResponse.noData)}
                 return
             }
-                VFGNetworkLogger.log(response: httpResponse)
+                AHNetworkLogger.log(response: httpResponse)
                 decodeJsonData(responseData, model, completion)
         case let .failure(networkResponseError):
             DispatchQueue.main.async {
@@ -168,13 +168,13 @@ extension VFGNetworkClient {
 }
 
 /// this extension for building the request and cofigure parameter and build headers
-extension VFGNetworkClient {
+extension AHNetworkClient {
 
-    open func buildRequest(from endPoint: VFGRequestProtocol,
+    open func buildRequest(from endPoint: AHRequestProtocol,
                            with headers: HTTPHeaders,
                            to baseURL: URL?) throws -> URLRequest {
         guard let baseURL = baseURL else {
-            throw VFGNetworkError.missingURL
+            throw AHNetworkError.missingURL
         }
         var request = URLRequest(url: baseURL.appendingPathComponent(endPoint.path),
                                  cachePolicy: endPoint.cachePolicy,
@@ -208,7 +208,7 @@ extension VFGNetworkClient {
         }
     }
     open func configureParameters(bodyParameters: Parameters?,
-                                  bodyEncoding: VFGParameterEncoder,
+                                  bodyEncoding: AHParameterEncoder,
                                   urlParameters: Parameters?,
                                   request: inout URLRequest) throws {
         do {
@@ -224,7 +224,7 @@ extension VFGNetworkClient {
             request.setValue(value, forHTTPHeaderField: key)
         }
     }
-    open func buildHeaders(request: VFGRequestProtocol, completion: @escaping VFGNetworkCompletion) -> HTTPHeaders {
+    open func buildHeaders(request: AHRequestProtocol, completion: @escaping AHNetworkCompletion) -> HTTPHeaders {
         var requestClientHeaders: HTTPHeaders = headers ?? [:]
         if  request.isAuthenticationNeededRequest ?? false {
             authClientProvider?.requestAuthToken { (token, error) in

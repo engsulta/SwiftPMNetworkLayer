@@ -1,13 +1,13 @@
 //
 //  NetworkError.swift
-//  VFGFoundation
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/15/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
 //
 
 import Foundation
-public enum VFGNetworkResponse: String, Error {
+public enum AHNetworkResponse: String, Error {
     case success
     case authenticationError = "You need to be authenticated first."
     case badRequest = "Bad request"
@@ -18,7 +18,7 @@ public enum VFGNetworkResponse: String, Error {
     case unableToDecode = "We could not decode the response."
 }
 
-public enum VFGNetworkError: String, Error {
+public enum AHNetworkError: String, Error {
     case parse      = "Unable to parse response"
     case network    = "Network operation failed"
     case empty      = "Empty response"

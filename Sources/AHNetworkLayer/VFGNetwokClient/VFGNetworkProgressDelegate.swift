@@ -1,6 +1,6 @@
 //
-//  VFGNetworkProgressDelegate.swift
-//  VFGFoundation
+//  AHNetworkProgressDelegate.swift
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 11/6/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
@@ -14,12 +14,12 @@ public struct GenericTask {
     var expectedContentLength: Int64 = 0
     var buffer = Data()
 }
-open class VFGNetworkProgressDelegate: NSObject {
+open class AHNetworkProgressDelegate: NSObject {
     var workingTask = GenericTask()
     override init() {}
     func addTask(dataTask task: URLSessionDataTaskProtocol? = nil,
                  downloadTask downTask: URLSessionDownloadTaskProtocol? = nil,
-                 progressClosure: VFGNetworkProgressClosure?) {
+                 progressClosure: AHNetworkProgressClosure?) {
         guard let progress = progressClosure else {
             return
         }
@@ -33,7 +33,7 @@ open class VFGNetworkProgressDelegate: NSObject {
     }
 }
 
-extension VFGNetworkProgressDelegate: URLSessionDataDelegate, URLSessionDownloadDelegate {
+extension AHNetworkProgressDelegate: URLSessionDataDelegate, URLSessionDownloadDelegate {
     open func urlSession(_ session: URLSession,
                          dataTask: URLSessionDataTask,
                          didReceive response: URLResponse,

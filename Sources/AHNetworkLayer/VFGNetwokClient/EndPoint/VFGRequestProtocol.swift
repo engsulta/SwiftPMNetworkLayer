@@ -1,6 +1,6 @@
 //
-//  VFGRequestProtocol.swift
-//  VFGFoundation
+//  AHRequestProtocol.swift
+//  AHFoundation
 //
 //  Created by Atta Amed on 10/23/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
@@ -18,7 +18,7 @@ public enum DataType {
 /**
  Network Generic EndPoint protocol used By business layer to create network Requests.
  */
-public protocol VFGRequestProtocol {
+public protocol AHRequestProtocol {
     /// The relative Endpoint path added to baseUrl
     var path: String {get}
     /// The HTTP request method
@@ -37,7 +37,7 @@ public protocol VFGRequestProtocol {
     var cachePolicy: CachePolicy { get }
 }
 
-extension VFGRequestProtocol {
+extension AHRequestProtocol {
     // internal hash for network foundation so that it can cancel your request
     internal var hash: Int {
         var hasher = Hasher()
@@ -65,9 +65,9 @@ public enum HTTPMethod: String {
 public enum HTTPTask {
     case request
     case requestParameters(bodyParameters: Parameters?,
-        bodyEncoding: VFGParameterEncoder,
+        bodyEncoding: AHParameterEncoder,
         urlParameters: Parameters?)
-    case requestParametersAndHeaders(bodyParameters: Parameters?, bodyEncoding: VFGParameterEncoder,
+    case requestParametersAndHeaders(bodyParameters: Parameters?, bodyEncoding: AHParameterEncoder,
         urlParameters: Parameters?,
         extraHeaders: HTTPHeaders?)
 }
@@ -101,7 +101,7 @@ extension HTTPTask: Hashable {
     }
 }
 // VFRequest is the concrete impletation that can be initialized using biulder
-public struct VFGRequest: VFGRequestProtocol {
+public struct AHRequest: AHRequestProtocol {
     public var httpMethod: HTTPMethod
     public var httpTask: HTTPTask
     public var headers: HTTPHeaders?

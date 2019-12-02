@@ -1,16 +1,16 @@
 //
-//  VFGNetworkClient.swift
-//  VFGFoundation
+//  AHNetworkClient.swift
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/17/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
 //
 
 import Foundation
-public typealias CurrentTask = (request: VFGRequestProtocol?, task: URLSessionDataTaskProtocol?)
+public typealias CurrentTask = (request: AHRequestProtocol?, task: URLSessionDataTaskProtocol?)
 // Exposed Network Client that will be inherited
-open class VFGNetworkClient: VFGNetworkClientProtocol {
-    internal weak var networkProgressDelegate: VFGNetworkProgressDelegate? {
+open class AHNetworkClient: AHNetworkClientProtocol {
+    internal weak var networkProgressDelegate: AHNetworkProgressDelegate? {
         return session.sessionDelegate
     }
     public var runningTasks: [CurrentTask] = []

@@ -1,6 +1,6 @@
 //
 //  NetworkLogger.swift
-//  VFGFoundation
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/15/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class VFGNetworkLogger {
+class AHNetworkLogger {
     static func log(request: URLRequest) {
         let urlAsString = request.url?.absoluteString ?? ""
         let urlComponents = NSURLComponents(string: urlAsString)

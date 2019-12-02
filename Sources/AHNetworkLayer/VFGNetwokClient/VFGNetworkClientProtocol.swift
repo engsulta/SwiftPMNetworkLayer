@@ -1,6 +1,6 @@
 //
-//  VFGNetworkClientProtocol.swift
-//  VFGFoundation
+//  AHNetworkClientProtocol.swift
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/16/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
@@ -8,10 +8,10 @@
 
 import Foundation
 
-public typealias VFGNetworkCompletion = ( Codable?, Error? ) -> Void
-public typealias VFGNetworkProgressClosure = ((Double) -> Void)?
-public typealias VFGNetworkDownloadClosure = ( URL?, URLResponse?, Error? ) -> Void
-public protocol VFGNetworkClientProtocol {
+public typealias AHNetworkCompletion = ( Codable?, Error? ) -> Void
+public typealias AHNetworkProgressClosure = ((Double) -> Void)?
+public typealias AHNetworkDownloadClosure = ( URL?, URLResponse?, Error? ) -> Void
+public protocol AHNetworkClientProtocol {
     /// The URL of the EndPoint at the server.
     var baseUrl: String { get }
     /// A dictionary containing all the Client Related HTTP header fields (default: nil)
@@ -23,24 +23,24 @@ public protocol VFGNetworkClientProtocol {
     /// The HTTP request timeout.
     var timeout: TimeInterval { get }
     ///start network execution to start http request
-    func execute<T: Codable>(request: VFGRequestProtocol,
+    func execute<T: Codable>(request: AHRequestProtocol,
                              model: T.Type,
-                             progressClosure: VFGNetworkProgressClosure?,
-                             completion: @escaping VFGNetworkCompletion)
-    func upload<T: Codable, U: Encodable>(request: VFGRequestProtocol,
+                             progressClosure: AHNetworkProgressClosure?,
+                             completion: @escaping AHNetworkCompletion)
+    func upload<T: Codable, U: Encodable>(request: AHRequestProtocol,
                                           responseModel: T.Type,
                                           uploadModel: U,
-                                          completion: @escaping VFGNetworkCompletion)
+                                          completion: @escaping AHNetworkCompletion)
     func download(url: String,
-                  progressClosure: VFGNetworkProgressClosure?,
-                  completion: @escaping VFGNetworkDownloadClosure)
-    func cancel(request: VFGRequestProtocol, completion: @escaping () -> Void)
+                  progressClosure: AHNetworkProgressClosure?,
+                  completion: @escaping AHNetworkDownloadClosure)
+    func cancel(request: AHRequestProtocol, completion: @escaping () -> Void)
 }
 
 public enum Result<NetworkError> {
     case success
-    case failure(VFGNetworkResponse)
+    case failure(AHNetworkResponse)
 }
 public protocol HTTPURLResponseProtocol {
-    func handleNetworkResponse() -> Result<VFGNetworkResponse>
+    func handleNetworkResponse() -> Result<AHNetworkResponse>
 }

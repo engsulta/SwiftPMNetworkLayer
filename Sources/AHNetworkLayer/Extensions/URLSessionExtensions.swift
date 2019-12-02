@@ -1,6 +1,6 @@
 //
 //  URLSessionExtensions.swift
-//  VFGFoundation
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/17/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
@@ -27,7 +27,7 @@ extension URLSessionDownloadTask: URLSessionDownloadTaskProtocol {}
 extension URLSessionDataTask: URLSessionDataTaskProtocol {}
 
 public protocol URLSessionProtocol {
-    var sessionDelegate: VFGNetworkProgressDelegate? { get }
+    var sessionDelegate: AHNetworkProgressDelegate? { get }
     typealias DataTaskResult = (Data?, URLResponse?, Error?) -> Void
     typealias DownloadTaskResult = (URL?, URLResponse?, Error?) -> Void
     func dataTask(with request: URLRequest, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol
@@ -62,8 +62,8 @@ extension URLSessionProtocol {
     }
 }
 extension URLSession: URLSessionProtocol {
-    public var sessionDelegate: VFGNetworkProgressDelegate? {
-        return delegate as? VFGNetworkProgressDelegate
+    public var sessionDelegate: AHNetworkProgressDelegate? {
+        return delegate as? AHNetworkProgressDelegate
     }
     public func downloadTask(with url: URL,
                              completionHandler: @escaping DownloadTaskResult) -> URLSessionDownloadTaskProtocol {

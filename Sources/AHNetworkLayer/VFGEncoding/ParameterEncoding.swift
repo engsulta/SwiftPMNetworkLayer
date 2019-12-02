@@ -1,6 +1,6 @@
 //
 //  ParameterEncoding.swift
-//  VFGFoundation
+//  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/15/19.
 //  Copyright © 2019 Vodafone. All rights reserved.
@@ -14,7 +14,7 @@ public protocol ParameterEncodingProtocol {
 /// encoding url parameters into encoded query
 public struct URLParameterEncoder: ParameterEncodingProtocol {
     public func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
-        guard let url = urlRequest.url else {throw VFGNetworkError.missingURL}
+        guard let url = urlRequest.url else {throw AHNetworkError.missingURL}
         guard var urlComponents = URLComponents(url: url,
                                                 resolvingAgainstBaseURL: false),
                                                !parameters.isEmpty else { return }
@@ -35,7 +35,7 @@ public struct JSONParameterEncoder: ParameterEncodingProtocol {
                 urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             }
         } catch {
-            throw VFGNetworkError.encodingFailed
+            throw AHNetworkError.encodingFailed
         }
     }
 }
@@ -50,7 +50,7 @@ public struct DataParameterEncoder: ParameterEncodingProtocol {
         }
     }
 }
-public enum VFGParameterEncoder {
+public enum AHParameterEncoder {
     case urlEncoding
     case jsonEncoding
     case urlAndJsonEncoding
