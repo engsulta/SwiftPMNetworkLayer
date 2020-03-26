@@ -1,7 +1,7 @@
 # Getting started with AHNetwork Layer
 
 ## Summary
-In this document, we will learn how to use the AHNetwork Layer, the AHNetwork Layer is a key part of the Foundation module, it is a Swift-based HTTP networking library for iOS, in this guide we will look at how to build and execute a complete network request.
+In this document, we will learn how to use the AHNetwork Layer, the AHNetwork Layer is a Swift-based HTTP networking library for iOS, in this guide we will look at how to build and execute a complete network request.
 
 ## Getting started with AHNetworkLayer
 To get started, you will need to have the AHFoundation pod installed in your workspace by adding the following line to your podfile and running the pod install command.
