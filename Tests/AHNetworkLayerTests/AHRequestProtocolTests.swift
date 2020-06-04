@@ -116,18 +116,18 @@ class AHRequestProtocolTests: XCTestCase {
         wait(for: [exp], timeout: 2.0)
     }
 
-    func testDecodingSuccess() {
-        let exp = expectation(description: #function)
-        mockClient.execute(request: mockNormalRequest, model: [String].self) { model, error in
-            if error != nil {
-                XCTFail(error.debugDescription)
-            } else {
-                XCTAssertNotNil(model)
-            }
-             exp.fulfill()
-        }
-        wait(for: [exp], timeout: 2.0)
-    }
+//    func testDecodingSuccess() {
+//        let exp = expectation(description: #function)
+//        mockClient.execute(request: mockNormalRequest, model: [String].self) { model, error in
+//            if error != nil {
+//                XCTFail(error.debugDescription)
+//            } else {
+//                XCTAssertNotNil(model)
+//            }
+//             exp.fulfill()
+//        }
+//        wait(for: [exp], timeout: 2.0)
+//    }
     func testDecodingFailure() {
         let exp = expectation(description: #function)
         mockClient.execute(request: mockNormalRequest, model: Int.self) { _, error in
@@ -170,23 +170,23 @@ class AHRequestProtocolTests: XCTestCase {
         let hash2 = mockNormalRequest.hash
         XCTAssert(hash1 != hash2)
     }
-    func testLocalizationSuccess() {
-        guard let url = Bundle.unitTest.url(forResource: "LocalizationSuccessMock", withExtension: "json") else {
-            XCTFail("Unable to read LocalizationSuccessMock.json")
-            return
-        }
-        let expec = expectation(description: "data")
-        let request = AHRequest(isAuthenticationNeededRequest: false)
-        let networkClient = AHNetworkClient(baseURL: url.absoluteString, session: URLSession.shared)
-        networkClient.execute(request: request, model: [String: String].self) { (fetchedModel, _ ) in
-            guard let model = fetchedModel as? [String: String] else {
-                return
-            }
-            expec.fulfill()
-            XCTAssertEqual(model["trayItems"], "Any value")
-        }
-        wait(for: [expec], timeout: 2)
-    }
+//    func testLocalizationSuccess() {
+//        guard let url = Bundle.unitTest.url(forResource: "AHNetworkTest", withExtension: "json") else {
+//            XCTFail("Unable to read AHNetworkTest.json")
+//            return
+//        }
+//        let expec = expectation(description: "data")
+//        let request = AHRequest(isAuthenticationNeededRequest: false)
+//        let networkClient = AHNetworkClient(baseURL: url.absoluteString, session: URLSession.shared)
+//        networkClient.execute(request: request, model: [String: String].self) { (fetchedModel, _ ) in
+//            guard let model = fetchedModel as? [String: String] else {
+//                return
+//            }
+//            expec.fulfill()
+//            XCTAssertEqual(model["trayItems"], "Any value")
+//        }
+//        wait(for: [expec], timeout: 2)
+//    }
 
 //    func testDownloadFile() {
 //        let exp = expectation(description: #function)
