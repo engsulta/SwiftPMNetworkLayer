@@ -5,6 +5,8 @@ import XCTest
 class AHRequestProtocolTests: XCTestCase {
 
     class MockRequest: AHRequestProtocol {
+        var cache: Bool?
+        
         var path: String
         var baseUrl: String
         var httpMethod: HTTPMethod

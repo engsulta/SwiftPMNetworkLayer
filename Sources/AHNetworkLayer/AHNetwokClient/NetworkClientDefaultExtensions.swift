@@ -14,6 +14,7 @@ public typealias ResponseCompletionHandler = (ResponseArg) -> Void
  call it accept type VFRequestType else you can build your own implementation with different request type
  */
 extension AHNetworkClient {
+    @discardableResult
     open func execute<T: Codable>(request: AHRequestProtocol,
                                   model: T.Type,
                                   progressClosure: AHNetworkProgressClosure? = nil,
