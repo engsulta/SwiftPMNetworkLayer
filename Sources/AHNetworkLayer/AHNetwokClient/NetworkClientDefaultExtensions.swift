@@ -3,7 +3,7 @@
 //  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/17/19.
-//  Copyright © 2019 Vodafone. All rights reserved.
+// 
 //
 
 import Foundation
@@ -17,7 +17,7 @@ extension AHNetworkClient {
     open func execute<T: Codable>(request: AHRequestProtocol,
                                   model: T.Type,
                                   progressClosure: AHNetworkProgressClosure? = nil,
-                                  completion: @escaping AHNetworkCompletion) {
+                                  completion: @escaping AHNetworkCompletion) -> T? {
         // the response handler that will be executed once network response recieved
         let responseCompletionHandler: (Data?,URLResponse?, Error?) -> Void = { [weak self] (data, res, error) in
             guard let self = self else {
@@ -32,8 +32,9 @@ extension AHNetworkClient {
         // to check if local file data task or network request data task
         do {
             let currentTask: URLSessionDataTaskProtocol
-            let baseURL = URL(string: baseUrl)
-            if let baseURL = baseURL, baseURL.isFileURL {
+            let isRequestPathFile = URL(string: request.path)?.isFileURL ?? false
+            let fileURL = isRequestPathFile ? URL(string: request.path): URL(string: baseUrl)
+            if let baseURL = fileURL, baseURL.isFileURL {
                  currentTask = session.dataTask(with: baseURL, completionHandler: responseCompletionHandler)
 
             } else {
@@ -51,6 +52,16 @@ extension AHNetworkClient {
         } catch {
             DispatchQueue.main.async {
                 completion(nil, AHNetworkError.unknown)}
+        }
+        if request.cache ?? false {
+            let path = request.path.replacingOccurrences(of: "/", with: "_")
+            if let data = AHCachingManager.shared.readData(from: path) {
+               return try? JSONDecoder().decode(model, from: data)
+            } else {
+                return nil
+            }
+        } else {
+            return nil
         }
     }
     open func cancel(request: AHRequestProtocol, completion: @escaping () -> Void) {
@@ -134,7 +145,7 @@ extension AHNetworkClient {
                                       model: T.Type,
                                       completion: @escaping AHNetworkCompletion) {
         guard responseArg.error == nil else {
-             DispatchQueue.main.async {
+            DispatchQueue.main.async {
                 completion(nil, responseArg.error)
             }
             return
@@ -142,14 +153,15 @@ extension AHNetworkClient {
         guard  let httpResponse = responseArg.urlResponse as? HTTPURLResponse else {
             // check if response for local file
             if responseArg.urlResponse?.url?.isFileURL ?? false, let responseData = responseArg.data {
-                 decodeJsonData(responseData, model, completion)
+                decodeJsonData(responseData, model, completion)
             } else {
-             DispatchQueue.main.async {
-                completion(nil, AHNetworkError.empty)
+                DispatchQueue.main.async {
+                    completion(nil, AHNetworkError.empty)
                 }
             }
             return
         }
+        
         let result = httpResponse.handleNetworkResponse()
         switch result {
         case .success:
@@ -158,8 +170,18 @@ extension AHNetworkClient {
                     completion(nil, AHNetworkResponse.noData)}
                 return
             }
-                AHNetworkLogger.log(response: httpResponse)
-                decodeJsonData(responseData, model, completion)
+            AHNetworkLogger.log(response: httpResponse)
+            decodeJsonData(responseData, model, completion)
+            var path = NSURLComponents(string: httpResponse.url?.absoluteString ?? "")?.path ?? ""
+            path  = path.replacingOccurrences(of: "/", with: "_")
+            do {
+                try AHCachingManager.shared.write(into: path, data: responseData)
+            } catch {
+                print(" could not cache response")
+                DispatchQueue.main.async {
+                    completion(nil, AHNetworkError.empty)
+                }
+            }
         case let .failure(networkResponseError):
             DispatchQueue.main.async {
                 completion(nil, networkResponseError)}

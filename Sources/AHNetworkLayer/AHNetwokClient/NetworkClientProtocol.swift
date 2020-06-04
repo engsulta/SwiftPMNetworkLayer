@@ -3,7 +3,7 @@
 //  AHFoundation
 //
 //  Created by Ahmed Sultan on 10/16/19.
-//  Copyright © 2019 Vodafone. All rights reserved.
+// 
 //
 
 import Foundation
@@ -26,7 +26,7 @@ public protocol AHNetworkClientProtocol {
     func execute<T: Codable>(request: AHRequestProtocol,
                              model: T.Type,
                              progressClosure: AHNetworkProgressClosure?,
-                             completion: @escaping AHNetworkCompletion)
+                             completion: @escaping AHNetworkCompletion) -> T?
     func upload<T: Codable, U: Encodable>(request: AHRequestProtocol,
                                           responseModel: T.Type,
                                           uploadModel: U,

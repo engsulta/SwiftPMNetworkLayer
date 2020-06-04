@@ -3,7 +3,7 @@
 //  AHFoundation
 //
 //  Created by Atta Amed on 10/23/19.
-//  Copyright © 2019 Vodafone. All rights reserved.
+// 
 //
 
 import Foundation
@@ -30,6 +30,8 @@ public protocol AHRequestProtocol {
     var headers: HTTPHeaders? {get}
     /// authentication Flag if exist in protocol network client may ask auth layer to provide new auth token
     var isAuthenticationNeededRequest: Bool? {get}
+    /// cache response
+    var cache: Bool? { get }
     ///The constants enum used to specify interaction with the cached responses.
     /** Specifies that the caching logic defined in the protocol implementation, if any, is
      used for a particular URL load request. This is the default policy
@@ -47,6 +49,7 @@ extension AHRequestProtocol {
         hasher.combine(isAuthenticationNeededRequest)
         hasher.combine(httpMethod)
         hasher.combine(httpTask)
+        hasher.combine(cache)
         return hasher.finalize()
     }
 }
@@ -102,6 +105,7 @@ extension HTTPTask: Hashable {
 }
 // VFRequest is the concrete impletation that can be initialized using biulder
 public struct AHRequest: AHRequestProtocol {
+    public var cache: Bool?
     public var httpMethod: HTTPMethod
     public var httpTask: HTTPTask
     public var headers: HTTPHeaders?
@@ -113,12 +117,14 @@ public struct AHRequest: AHRequestProtocol {
                 httpTask: HTTPTask = NetworkDefaults.httpTask,
                 headers: HTTPHeaders? = NetworkDefaults.httpHeaders,
                 isAuthenticationNeededRequest: Bool? = NetworkDefaults.isAuthenticationNeeded,
-                cachePolicy: CachePolicy = NetworkDefaults.cashPolicy) {
+                cachePolicy: CachePolicy = NetworkDefaults.cashPolicy,
+                cache: Bool? = false) {
         self.path = path
         self.httpMethod = httpMethod
         self.httpTask = httpTask
         self.headers = headers
         self.isAuthenticationNeededRequest = isAuthenticationNeededRequest
         self.cachePolicy = cachePolicy
+        self.cache = cache
     }
 }
