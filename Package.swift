@@ -13,6 +13,16 @@ let package = Package(
             name: "AHNetworkLayer",
            
             targets: ["AHNetworkLayer"]),
+        
+         .library(
+            name: "AHNetworkLayerStatic",
+           , type: .static,
+            targets: ["AHNetworkLayer"]),
+        
+        .library(
+            name: "AHNetworkLayerDynamic",
+           , type: .dynamic,
+            targets: ["AHNetworkLayer"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
