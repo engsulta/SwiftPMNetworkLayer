@@ -9,20 +9,11 @@ let package = Package(
     .iOS(.v11)],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
-        .library(
-            name: "AHNetworkLayer",
-           
-            targets: ["AHNetworkLayer"]),
-        
-         .library(
-            name: "AHNetworkLayerStatic",
-           , type: .static,
-            targets: ["AHNetworkLayer"]),
-        
-        .library(
-            name: "AHNetworkLayerDynamic",
-           , type: .dynamic,
-            targets: ["AHNetworkLayer"])
+        .library(name: "AHNetworkLayer",targets: ["AHNetworkLayer"]),
+       
+        .library(name: "AHNetworkLayerStatic", type: .static, targets: ["AHNetworkLayer"]),
+        .library(name: "AHNetworkLayerDynamic", type: .dynamic, targets: ["AHNetworkLayer"]),
+    
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
